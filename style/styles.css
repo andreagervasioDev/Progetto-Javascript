@@ -1,0 +1,198 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f5f4f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1a1a1a;
+    }
+
+    #app {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* Tutti gli stili degli elementi creati dinamicamente */
+    .counter-label {
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 1.2rem;
+    }
+
+    .counter-display {
+      font-size: 100px;
+      font-weight: 500;
+      line-height: 1;
+      min-width: 220px;
+      text-align: center;
+      margin-bottom: 2rem;
+      transition: color 0.2s, transform 0.1s;
+      font-variant-numeric: tabular-nums;
+      color: #1a1a1a;
+    }
+
+    .counter-display.positive { color: #0f6e56; }
+    .counter-display.negative { color: #993c1d; }
+    .counter-display.bump { transform: scale(1.08); }
+
+    .btn-row {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .counter-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 1px solid #d0cec6;
+      background: #ffffff;
+      color: #1a1a1a;
+      font-size: 30px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+      user-select: none;
+    }
+
+    .counter-btn:hover {
+      background: #eeede8;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .counter-btn:active { transform: scale(0.92); }
+
+    .step-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .step-label {
+      font-size: 13px;
+      color: #888;
+    }
+
+    .step-input {
+      width: 64px;
+      text-align: center;
+      font-size: 14px;
+      padding: 5px 8px;
+      border: 1px solid #d0cec6;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #1a1a1a;
+      outline: none;
+    }
+
+    .step-input:focus { border-color: #888; }
+
+    .reset-btn {
+      font-size: 13px;
+      color: #888;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 5px 14px;
+      border-radius: 8px;
+      transition: background 0.15s, color 0.15s;
+      margin-bottom: 0.8rem;
+    }
+
+    .reset-btn:hover { background: #eeede8; color: #1a1a1a; }
+
+    .reset-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 0.8rem;
+      position: relative;
+    }
+
+    .help-wrapper {
+      position: relative;
+    }
+ 
+    .help-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid #d0cec6;
+      background: #ffffff;
+      color: #888;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, color 0.15s;
+      user-select: none;
+    }
+ 
+    .help-btn:hover { background: #eeede8; color: #1a1a1a; }
+ 
+    .help-tooltip {
+      display: none;
+      position: absolute;
+      bottom: 44px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ffffff;
+      border: 1px solid #d0cec6;
+      border-radius: 12px;
+      padding: 14px 16px;
+      width: 220px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+    }
+ 
+    .help-tooltip.visible { display: block; }
+ 
+    .help-tooltip-title {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 10px;
+    }
+ 
+    .help-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+ 
+    .help-row:last-child { margin-bottom: 0; }
+ 
+    .help-key {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      height: 26px;
+      padding: 0 7px;
+      background: #f5f4f0;
+      border: 1px solid #d0cec6;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #444;
+      flex-shrink: 0;
+    }
+ 
+    .help-desc {
+      font-size: 13px;
+      color: #555;
+    }
