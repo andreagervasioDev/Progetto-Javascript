@@ -1,124 +1,59 @@
 
 // Stato dell'applicazione
-let count = parseInt(localStorage.getItem('counter_value') || '0');
-let operationHistory = [];
+let count = parseInt(localStorage.getItem('counter-value') || '0');
+
+function el(tag, props = {}, ...children) {
+    const node = document.createElement(tag);
+    const { className, textContent, ...attrs } = props;
+    if (className) node.className = className;
+    if (textContent !== undefined) node.textContent = textContent;
+    for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+    children.forEach(c => node.appendChild(c));
+    return node;
+}
 
 // Creazione dinamica del counter tramite manipolazione del DOM
 const app = document.getElementById('app');
 
-// Label descrittiva
-const label = document.createElement('span');
-label.className = 'counter-label';
-label.textContent = 'contatore';
-app.appendChild(label);
+const label   = el('span', { className: 'counter-label', textContent: 'contatore' });
+const display = el('div',  { className: 'counter-display', textContent: '0' });
 
-// Display del valore
-const display = document.createElement('div');
-display.className = 'counter-display';
-display.textContent = '0';
-app.appendChild(display);
+const btnDec = el('button', { className: 'counter-btn', textContent: '-', 'aria-label': 'Decrementa' });
+const btnInc = el('button', { className: 'counter-btn', textContent: '+', 'aria-label': 'Incrementa' });
+const btnRow = el('div', { className: 'btn-row' }, btnDec, btnInc);
 
-// Riga pulsanti - e +
-const btnRow = document.createElement('div');
-btnRow.className = 'btn-row';
+const stepLabel = el('label', { className: 'step-label', textContent: 'passo', for: 'step-input' });
+const stepInput = el('input', { className: 'step-input', id: 'step-input', type: 'number', value: '1', min: '1', max: '1000' });
+const stepRow   = el('div', { className: 'step-row' }, stepLabel, stepInput);
 
-const btnDec = document.createElement('button');
-btnDec.className = 'counter-btn';
-btnDec.textContent = '-';
-btnDec.setAttribute('aria-label', 'Decrementa')
-
-const btnInc = document.createElement('button');
-btnInc.className = 'counter-btn';
-btnInc.textContent = '+';
-btnInc.setAttribute('aria-label', 'Incrementa')
-
-btnRow.appendChild(btnDec);
-btnRow.appendChild(btnInc);
-app.appendChild(btnRow);
-
-// Riga passo personalizzato 
-const stepRow = document.createElement('div');
-stepRow.className = 'step-row';
-
-const stepLabel = document.createElement('label');
-stepLabel.className = 'step-label';
-stepLabel.textContent = 'passo';
-stepLabel.setAttribute('for', 'step-input');
-
-const stepInput = document.createElement('input');
-stepInput.type = 'number';
-stepInput.id = 'step-input';
-stepInput.className = 'step-input';
-stepInput.value = '1';
-stepInput.min = '1';
-stepInput.max = '1000';
-
-stepRow.appendChild(stepLabel);
-stepRow.appendChild(stepInput);
-app.appendChild(stepRow);
-
-// Riga reset + help affiancati
-const resetRow = document.createElement('div');
-resetRow.className = 'reset-row';
-
-// Pulsante reset
-const resetBtn = document.createElement('button');
-resetBtn.className = 'reset-btn';
-resetBtn.textContent = 'reset';
-resetRow.appendChild(resetBtn);
-
-// Bottone ? con legenda scorciatoie da tastiera
-const helpWrapper = document.createElement('div');
-helpWrapper.className = 'help-wrapper';
-
-const helpBtn = document.createElement('button');
-helpBtn.className = 'help-btn';
-helpBtn.textContent = '?';
-helpBtn.setAttribute('aria-label', 'Mostra legenda tasti');
-
-const helpTooltip = document.createElement('div');
-helpTooltip.className = 'help-tooltip';
-
-const tooltipTitle = document.createElement('div');
-tooltipTitle.className = 'help-tooltip-title';
-tooltipTitle.textContent = 'scorciatoie da tastiera';
-helpTooltip.appendChild(tooltipTitle);
+const resetBtn = el('button', { className: 'reset-btn', textContent: 'reset' });
 
 const shortcuts = [
-{ key: '↑', desc: 'Incrementa' },
-{ key: '↓', desc: 'Decrementa' },
-{ key: 'R', desc: 'Reset a zero' }
+    { key: '↑', desc: 'Incrementa' },
+    { key: '↓', desc: 'Decrementa' },
+    { key: 'R', desc: 'Reset a zero' }
 ];
 
+const tooltipTitle = el('div', { className: 'help-tooltip-title', textContent: 'scorciatoie da tastiera' });
+const helpTooltip  = el('div', { className: 'help-tooltip' }, tooltipTitle);
+
 shortcuts.forEach(function(s) {
-const row = document.createElement('div');
-row.className = 'help-row';
-
-const keyEl = document.createElement('span');
-keyEl.className = 'help-key';
-keyEl.textContent = s.key;
-
-const descEl = document.createElement('span');
-descEl.className = 'help-desc';
-descEl.textContent = s.desc;
-
-row.appendChild(keyEl);
-row.appendChild(descEl);
-helpTooltip.appendChild(row);
+    helpTooltip.appendChild(
+        el('div', { className: 'help-row' },
+            el('span', { className: 'help-key',  textContent: s.key }),
+            el('span', { className: 'help-desc', textContent: s.desc })
+        )
+    );
 });
 
-helpBtn.addEventListener('click', function(e) {
-e.stopPropagation();
-helpTooltip.classList.toggle('visible');
-});
+const helpBtn     = el('button', { className: 'help-btn', textContent: '?', 'aria-label': 'Mostra legenda tasti' });
+const helpWrapper = el('div', { className: 'help-wrapper' }, helpTooltip, helpBtn);
+const resetRow    = el('div', { className: 'reset-row' }, resetBtn, helpWrapper);
 
-document.addEventListener('click', function() {
-helpTooltip.classList.remove('visible');
-});
-
-helpWrapper.appendChild(helpTooltip);
-helpWrapper.appendChild(helpBtn);
-resetRow.appendChild(helpWrapper);
+app.appendChild(label);
+app.appendChild(display);
+app.appendChild(btnRow);
+app.appendChild(stepRow);
 app.appendChild(resetRow);
 
 // Funzioni di logica
@@ -130,7 +65,6 @@ function getStep() {
 function render() {
     display.textContent = count;
 
-    // Colora in base al segno
     display.classList.remove('positive', 'negative');
     if (count > 0) {
         display.classList.add('positive');
@@ -148,15 +82,13 @@ function bump() {
 
 // Event Listeners
 btnInc.addEventListener('click', function() {
-    const step = getStep();
-    count += step;
+    count += getStep();
     bump();
     render();
 });
 
 btnDec.addEventListener('click', function() {
-    const step = getStep();
-    count -= step;
+    count -= getStep();
     bump();
     render();
 });
@@ -166,18 +98,26 @@ resetBtn.addEventListener('click', function() {
     render();
 });
 
+helpBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    helpTooltip.classList.toggle('visible');
+});
+
+document.addEventListener('click', function() {
+    helpTooltip.classList.remove('visible');
+});
+
 // Supporto tastiera: freccia su/giu e R per reset
 document.addEventListener('keydown', function(e) {
     if (e.target === stepInput) return;
     if (e.key === 'ArrowUp') {
         btnInc.click();
-    }else if (e.key === 'ArrowDown') {
+    } else if (e.key === 'ArrowDown') {
         btnDec.click();
     } else if (e.key === 'r' || e.key === 'R') {
         resetBtn.click();
     }
 });
 
-// Inizializzazione 
+// Inizializzazione
 render();
-
