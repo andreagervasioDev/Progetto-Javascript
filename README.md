@@ -11,6 +11,7 @@ counter/
 │   └── script.js
 ├── style/
 │   └── styles.css
+└── .gitignore
 └── README.md
 ```
 
